@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import Footer from './layout/Footer';
 import Header from './layout/Header';
+import BoardWrite from './pages/BoardWrite';
 import Main from './pages/Main';
 
 
@@ -12,6 +13,7 @@ function App() {
         <Router>
           <Routes>
            <Route path='/' element={<Main/>}/>
+           <Route path='/write' element={<BoardWrite/>}/>
           </Routes>
         </Router>
         <Footer/>
