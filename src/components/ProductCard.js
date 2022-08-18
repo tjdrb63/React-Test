@@ -1,6 +1,10 @@
+import { useEffect } from 'react';
 import img from '../images/logo.jpg'
 
-function ProductCard(){
+function ProductCard(props){
+    useEffect(()=>{
+        console.log(props)
+    },[props.title])
     return(
         <div className="w-60 h-60 p-4 m-2 rounded-xl hover:bg-gray-200">
             {/* 이미지 영역  */}
@@ -9,9 +13,9 @@ function ProductCard(){
             </div>
             {/* 글자 영역 */}
             <div>
-                <p className="font-bold mt-1 truncate">영진전문대학 팝니다</p>
-                <p className="text-gray-400 font-bold">726호</p>
-                <p className="text-sky-700 font-bold">17,000원</p>    
+                <p className="font-bold mt-1 mb-0 truncate">{props.product.title}</p>
+                <p className="text-gray-500 text-sm -mt-1 font-bold">{props.product.room}호</p>
+                <p className="text-sky-700 text-md font-bold">{props.product.price}원</p>    
             </div>
         </div>
     )

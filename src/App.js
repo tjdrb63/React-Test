@@ -16,7 +16,6 @@ function App() {
            <Route path='/write' element={<BoardWrite/>}/>
           </Routes>
         </Router>
-        <Footer/>
     </div>
   );
 }
