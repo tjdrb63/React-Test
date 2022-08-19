@@ -2,6 +2,7 @@ import axios from 'axios';
 import React from 'react'
 import {useState} from 'react'
 import plus from '../images/plus.png'
+import { uploadFile } from 'react-s3';
 
 // 제목
 // 호실
@@ -10,6 +11,20 @@ import plus from '../images/plus.png'
 // 비밀번호
 
 function BoardWrite(){
+
+    const region = "us-east-1";
+    const bucket = "jskreact";
+
+
+    window.Buffer = window.Buffer || require("buffer").Buffer;
+    
+    const config = {
+        bucketName: bucket,
+        region: region,
+        accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+    }
+
     const [title,setTitle] = useState("");
     const [room,setRoom] = useState("");
     const [password,setPassword] = useState("");
@@ -17,11 +32,14 @@ function BoardWrite(){
     const [price,setPrice] = useState("")
     const [preview,setPreview] = useState([]);
     const [imageFile,setImageFile] = useState("");
+    const [selectedPreview,setSelectedPreview] = useState("")
+    const [json,setJson] = useState([])
 
     const ImageHandle =(e) =>{
-        console.log(e.target.files[0])
-        setPreview([...preview],URL.createObjectURL(e.target.files[0]))
-        setImageFile(e.target.files[0])
+        const check = URL.createObjectURL(e.target.files[0])
+        setPreview([...preview,check])
+        setSelectedPreview(check)
+        setImageFile([...imageFile,e.target.files[0]])
     }
     const InputHandle = (e) =>{
         console.log(e.target.id)
@@ -36,14 +54,27 @@ function BoardWrite(){
         else if(e.target.id=="price")
             setPrice(e.target.value)
     }
+
+   
+
     const SaveData = () =>{
+
+           preview.forEach((preview,index) => {
+                uploadFile(imageFile[index],config)
+                .then(data=>{
+                    setJson([...json,data.location])    
+                })
+                
+        });
+       
         axios.post("http://localhost:8000/products",
         {
             title:title,
             room:room,
             password:password,
             content:content,
-            price:price
+            price:price,
+            photo:json
 
         }).then(res=>{
             alert("글써짐")
@@ -51,11 +82,14 @@ function BoardWrite(){
         })
     }
 
+    const clickPreview = (image)=>{
+        setSelectedPreview(image)
+    }
+
     return(
         <div>
             <div class="flex justify-center items-center mx-auto">
                 <div class="flex justify-center">
-                    
                     <div class="flex flex-col w-192 my-16 p-2">
                         
                         {/* <input type="file" onChange={ImageHandle}></input> */}
@@ -72,19 +106,26 @@ function BoardWrite(){
                                 multiple
                                 onChange={ImageHandle}
                             />
-                        <div className=' h-96 w-full'>
+                        <div className='h-96 w-full'>
                             {preview.length>0 ?
                                 <div>
-                                    {preview.map(image => {
-                                           <>{image}</>
-                                           // <img className='bg-black object-contain  h-96' src={image} alt="사진을 넣어주세요!"/>
-                                        
-                                    })}
+                                    <img className='bg-black object-contain w-full h-96' src={selectedPreview} alt="사진을 넣어주세요!"/> 
                                 </div>
                                 :<img className='object-contain w-full h-96 bg-gray-200' src={plus} alt="사진을 넣어주세요!"/>      
                             }
                         </div>
-                        <div className='bg-gray-400 h-32'>관리 영역</div>
+                        <p className='bg-white text-md text-gray-600 pl-4 mt-2 rounded-sm\'>사진 리스트</p> 
+                        <div className='bg-white  h-32'>
+                            <div className='flex overflow-x-scroll'>
+                            {preview.map(image => {
+                                          return(
+                                                <>
+                                                <img onClick={()=>clickPreview(image)} className='mr-2 bg-black object-fill w-32 h-32' src={image} alt="사진을 넣어주세요!"/>
+                                                </>
+                                           )
+                                    })}
+                            </div>
+                        </div>
                         
 
                     </div>

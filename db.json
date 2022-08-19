@@ -1,63 +1,13 @@
 {
   "products": [
     {
-      "id": 1,
-      "title": "영진대 팝니다",
-      "room": 726,
-      "price": 17000,
-      "photo": ""
-    },
-    {
-      "id": 2,
-      "title": "식권 팝니다",
-      "room": 813,
-      "price": 1234,
-      "photo": ""
-    },
-    {
-      "id": 3,
-      "title": "박주형 팝니다",
-      "room": 111,
-      "price": 1,
-      "photo": ""
-    },
-    {
-      "id": 4,
-      "title": "김진호 팝니다",
-      "room": 123,
-      "price": 99999,
-      "photo": ""
-    },
-    {
-      "title": "ㅂㅈㅇㅂㅈㅇ",
-      "room": "123",
-      "password": "1234",
-      "content": "어쩌라고 ㅋㅋ",
-      "id": 5
-    },
-    {
-      "title": "영진대 싸게 넘깁니다",
-      "room": "726",
-      "password": "1234",
-      "content": "안팔건데",
-      "price": "12345",
-      "id": 6
-    },
-    {
-      "title": "영진대 싸게 넘깁니다",
-      "room": "726",
-      "password": "1234",
-      "content": "안팔건데",
-      "price": "12345",
-      "id": 7
-    },
-    {
-      "title": "영진대 싸게 넘깁니다",
-      "room": "726",
-      "password": "1234",
-      "content": "안팔건데",
-      "price": "12345",
-      "id": 8
+      "title": "영진전문대학 팝니다",
+      "room": "222",
+      "password": "123123",
+      "content": "어쩌라고",
+      "price": "17000",
+      "photo": [],
+      "id": 1
     }
   ]
 }
