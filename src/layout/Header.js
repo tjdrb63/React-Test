@@ -14,7 +14,7 @@ function Header(){
     }
 
     return(
-        <div className="pb-16">
+        <div className="pb-16 z-20">
             <div className="fixed border-gray-200 bg-white flex justify-between w-full h-16">
                 <div className="flex">
                     <img className="my-2 ml-10 mr-2 h-12 w-12" src={logo}></img>

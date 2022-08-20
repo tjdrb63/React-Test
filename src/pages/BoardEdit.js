@@ -10,14 +10,12 @@ import { uploadFile } from 'react-s3';
 // 사진
 // 비밀번호
 
-function BoardWrite(){
-
+function BoardEdit(props){
     const region = "us-east-1";
     const bucket = "jskreact";
 
-
     window.Buffer = window.Buffer || require("buffer").Buffer;
-    
+
     const config = {
         bucketName: bucket,
         region: region,
@@ -33,7 +31,18 @@ function BoardWrite(){
     const [preview,setPreview] = useState([]);
     const [imageFile,setImageFile] = useState("");
     const [selectedPreview,setSelectedPreview] = useState("")
-    const [json,setJson] = useState([])
+ 
+
+    // 기존데이터 보여주기
+    useEffect(()=>{
+        console.log(props.productData.id)
+        setTitle(props.productData.title)
+        setContent(props.productData.content)
+        setRoom(props.productData.room)
+        setPrice(props.productData.price)
+        setPassword(props.productData.password)
+
+    },[props])  
 
     const ImageHandle =(e) =>{
         const check = URL.createObjectURL(e.target.files[0])
@@ -41,6 +50,7 @@ function BoardWrite(){
         setSelectedPreview(check)
         setImageFile([...imageFile,e.target.files[0]])
     }
+
     const InputHandle = (e) =>{
         console.log(e.target.id)
         if(e.target.id == "title")
@@ -63,7 +73,7 @@ function BoardWrite(){
                 .then(data=>{
                     checkjson.push(data.location)
                     if(checkjson.length>0 && checkjson.length == imageFile.length){
-                        axios.post("http://localhost:8000/products",
+                        axios.put("http://localhost:8000/products/"+props.productData.id,
                         {
                             title:title,
                             room:room,
@@ -74,7 +84,7 @@ function BoardWrite(){
                 
                         }).then(res=>{
                             alert("글써짐")
-                            window.location.href="/"
+                            window.location.href="/product/"+props.productData.id
                         })
                     }
                 })  
@@ -84,11 +94,16 @@ function BoardWrite(){
             alert("정보를 입력 해 주세요")
         }
     }
+    const deleteData = () =>{ 
+        axios.delete("http://localhost:8000/products/"+props.productData.id)
+        .then(
+            window.location.href="/product/"+props.productData.id
+        )
+    }
+    const exitBtn = () =>{
+        window.location.href="/product/"+props.productData.id
+    }
 
-    useEffect(()=>{
-        console.log("json 바뀜" + json)
-        
-    },[json])
 
     const clickPreview = (image)=>{
         setSelectedPreview(image)
@@ -98,7 +113,7 @@ function BoardWrite(){
         <div>
             <div class="flex justify-center items-center mx-auto">
                 <div class="flex justify-center">
-                    <div class="flex flex-col w-192 my-16 p-2">
+                    <div class="flex flex-col w-192  p-2">
                         
                         {/* <input type="file" onChange={ImageHandle}></input> */}
                             <label
@@ -119,7 +134,7 @@ function BoardWrite(){
                                 <div>
                                     <img className='bg-black object-contain w-full h-96' src={selectedPreview} alt="사진을 넣어주세요!"/> 
                                 </div>
-                                :<img className='object-contain w-full h-96 bg-gray-200' src={plus} alt="사진을 넣어주세요!"/>      
+                                :<img className='object-contain w-full h-96 ' src={plus} alt="사진을 넣어주세요!"/>      
                             }
                         </div>
                         <p className='bg-white text-md text-gray-600 pl-4 mt-2 rounded-sm\'>사진 리스트</p> 
@@ -138,10 +153,10 @@ function BoardWrite(){
 
                     </div>
     
-                    <div class="p-8 bg-gray-100 dark:bg-gray-800 flex flex-col lg:w-full xl:w-3/5">
-                        <div class="mt-8">
-                        <label class="mt-8 text-xl text-sky-700">제목</label>
-                            <input onChange={InputHandle} class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600" type="text" id="title" placeholder="OOO 팝니다" />
+                    <div class="px-8 flex flex-col lg:w-full xl:w-3/5">
+                        <div class="">
+                        <label class="text-xl text-sky-700">제목</label>
+                            <input onChange={InputHandle} defaultValue={title} class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600" type="text" id="title" placeholder="OOO 팝니다" />
                         </div>    
                         <label class="mt-4 text-xl text-sky-700">가격</label>
                         <input onChange={InputHandle} class="border border-gray-300 p-4 text-right rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600" type="number" id="price" placeholder="XXXXX원" />
@@ -149,25 +164,33 @@ function BoardWrite(){
                         <div class="mt-4 flex-col">  
                             <label class="mt-8 text-xl text-sky-700">부가 정보</label>
                             <div class="flex-row flex">
-                                <input onChange={InputHandle} class="border rounded-bl border-gray-300 p-4 w-full text-base leading-4 placeholder-gray-600 text-gray-600" type="number" name="" id="room" placeholder="호실" />
-                                <input onChange={InputHandle} class="border rounded-br border-gray-300 p-4 w-full text-base leading-4 placeholder-gray-600 text-gray-600" type="password" name="" id="password" placeholder="비밀번호" />
+                                <input onChange={InputHandle} defaultValue={room} class="border rounded-bl border-gray-300 p-4 w-full text-base leading-4 placeholder-gray-600 text-gray-600" type="number" name="" id="room" placeholder="호실" />
+                                <input onChange={InputHandle} defaultValue={password} class="border rounded-br border-gray-300 p-4 w-full text-base leading-4 placeholder-gray-600 text-gray-600" type="password" name="" id="password" placeholder="비밀번호" />
                             </div>
                         </div>
     
                         <label class="mt-8 text-xl text-sky-700">게시글 내용</label>
                         <div class="mt-2 flex-col">
                             <div>
-                                <textarea onChange={InputHandle} class="h-96 border rounded border-gray-300 p-4 w-full text-base leading-4 placeholder-gray-600 text-gray-600" type="email" name="" id="content" placeholder="하고싶은 말을 써주세요!" />
+                                <textarea onChange={InputHandle} defaultValue={content} class="h-96 border rounded border-gray-300 p-4 w-full text-base leading-4 placeholder-gray-600 text-gray-600" type="email" name="" id="content" placeholder="하고싶은 말을 써주세요!" />
                             </div>
                         </div>
-                        <button onClick={SaveData} class="mt-8 border border-transparent hover:border-gray-300 dark:bg-white dark:hover:bg-gray-900 dark:text-gray-900 dark:hover:text-white dark:border-transparent bg-sky-700 hover:bg-sky-400 text-white hover:text-gray-900 flex justify-center items-center py-4 rounded w-full">
-                            <div>
-                                <p class="text-base leading-4">작성하기 </p>
-                            </div>
-                        </button>
+                        
                     </div>
                 </div>
         </div>
+        <div className='flex'>
+            <button onClick={SaveData} class="mt-8 mx-8 border border-transparent hover:border-gray-300 dark:bg-white dark:hover:bg-gray-900 dark:text-gray-900 dark:hover:text-white dark:border-transparent bg-sky-700 hover:bg-sky-400 text-white hover:text-gray-900 flex justify-center items-center py-4 rounded w-full">
+                    수정하기
+            </button>
+            <button onClick={deleteData} class="mt-8 mx-8 border border-transparent hover:border-gray-300 bg-red-700 hover:bg-red-400 text-white hover:text-gray-900 flex justify-center items-center py-4 rounded w-full">
+                    삭제하기
+            </button>
+            <button onClick={exitBtn} class="mt-8 mx-8 border border-transparent hover:border-gray-300 bg-gray-700 hover:bg-gray-400 text-white hover:text-gray-900 flex justify-center items-center py-4 rounded w-full">
+                    나가기
+            </button>
+        </div>
+        
     </div>
     )
-}export default BoardWrite;
+}export default BoardEdit;

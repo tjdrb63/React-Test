@@ -5,11 +5,17 @@ function ProductCard(props){
     useEffect(()=>{
         console.log(props)
     },[props.title])
+
+    const clickCard= () => {
+        window.location.href="/product/"+props.product.id
+    }
+
     return(
-        <div className="w-60 h-60 p-4 m-2 rounded-xl hover:bg-gray-200">
+        <div onClick={clickCard}  className="w-60 h-60 p-4 m-2 rounded-xl hover:bg-gray-200">
             {/* 이미지 영역  */}
             <div >
-                <img className="rounded-xl h-36 w-60" src={img}></img>
+                <img className="rounded-xl h-36 w-60" src={props.product.photo[0]}></img>
+                
             </div>
             {/* 글자 영역 */}
             <div>
