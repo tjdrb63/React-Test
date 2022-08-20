@@ -2,6 +2,9 @@
 영진대학교 글로벌 캠퍼스 중고나라 마켓<br>
 로그인 없이 비밀번호로만 운영되기 때문에 글작성시 비밀번호만 기억하면 됩니다.<br>
 
+실행방법 : 
+Front : npm start
+Back : npx json-server --watch db.json --port 8000
 
 <h2>메인 페이지</h2>
 
